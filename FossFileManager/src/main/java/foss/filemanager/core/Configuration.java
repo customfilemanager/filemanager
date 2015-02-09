@@ -17,10 +17,22 @@
 
 package foss.filemanager.core;
 
+import java.io.File;
+
 /**
  *
  * @author CustomFileManager@gmail.com
  */
 public interface Configuration {
+    
+    String serverPathAsString();
+    
+    File serverPathAsDir();
+    
+    StorageManager.Encoding defaultEncoding();
+    
+    String defaultEncodingAsStr();
+    
+    boolean isEncriptionEnabled();
     
 }
