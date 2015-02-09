@@ -33,4 +33,6 @@ public interface StorageManager {
     
     public static enum TypeStorage { FILE, DATABASE };
     
+    
+    
 }
