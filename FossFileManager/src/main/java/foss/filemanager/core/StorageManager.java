@@ -69,7 +69,4 @@ public interface StorageManager {
     
     File load(String path, Encoding enc);
     
-    
-    
-    
 }
