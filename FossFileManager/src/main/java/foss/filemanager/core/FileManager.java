@@ -18,6 +18,8 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
 
 /**
  *
@@ -147,6 +149,26 @@ public class FileManager implements StorageManager, CustomFileManager {
 
     @Override
     public File load(Long archivoId) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Archivo loadArchivo(Archivo archivo) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Files> loadArchivos(List<Long> archivosIds) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<File> load(List<Long> archivosIds) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Archivo> loadArchivosAsArchs(List<Archivo> archivoss) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

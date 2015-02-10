@@ -18,6 +18,8 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import java.io.File;
+import java.nio.file.Files;
+import java.util.List;
 
 /**
  *
@@ -46,6 +48,14 @@ public interface CustomFileManager {
     File load(Archivo archivo, StorageManager.Encoding enc);
     
     File load(Long archivoId);
+    
+    Archivo loadArchivo(Archivo archivo);
+    
+    List<Files> loadArchivos(List<Long> archivosIds);
+    
+    List<File> load(List<Long> archivosIds);
+    
+    List<Archivo> loadArchivosAsArchs(List<Archivo> archivoss);
     
     
 }
