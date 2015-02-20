@@ -51,6 +51,68 @@ public class Archivo {
     private String md5;
     
     private boolean isEncrypted;
-    
-    
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public TipoArchivo getTipoArchivo() {
+        return tipoArchivo;
+    }
+
+    public void setTipoArchivo(TipoArchivo tipoArchivo) {
+        this.tipoArchivo = tipoArchivo;
+    }
+
+    public String getRutaParcial() {
+        return rutaParcial;
+    }
+
+    public void setRutaParcial(String rutaParcial) {
+        this.rutaParcial = rutaParcial;
+    }
+
+    public Long getCreador() {
+        return creador;
+    }
+
+    public void setCreador(Long creador) {
+        this.creador = creador;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Long getDuenoUs() {
+        return duenoUs;
+    }
+
+    public void setDuenoUs(Long duenoUs) {
+        this.duenoUs = duenoUs;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
+    }
+
+    public boolean isIsEncrypted() {
+        return isEncrypted;
+    }
+
+    public void setIsEncrypted(boolean isEncrypted) {
+        this.isEncrypted = isEncrypted;
+    }
 }
