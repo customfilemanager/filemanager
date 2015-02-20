@@ -18,8 +18,10 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -27,9 +29,18 @@ import java.util.List;
  */
 public class FileManager implements StorageManager, CustomFileManager {
 
+    private void saveFile(File file) throws IOException{
+        Configuration conf = new FileConfiguration();
+        if (!conf.serverPathAsDir().exists()) {
+            conf.serverPathAsDir().mkdirs();
+        }
+        File serverFile = new File(conf.serverPathAsString() + File.separator + file.getName());
+        FileUtils.copyFile(file, serverFile);
+    }
+
     @Override
-    public void save(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file) throws IOException{
+        saveFile(file);
     }
 
     @Override

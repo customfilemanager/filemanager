@@ -19,6 +19,7 @@ package foss.filemanager.core;
 
 import static foss.filemanager.core.StorageManager.TypeStorage.FILE;
 import java.io.File;
+import java.io.IOException;
 
 
 /**
@@ -39,7 +40,7 @@ public interface StorageManager {
      */
     public static enum Encoding { UTF8, ISO_8859_1 };
     
-    void save(File file);
+    void save(File file) throws IOException;
     
     void save(File file, String path);
     
