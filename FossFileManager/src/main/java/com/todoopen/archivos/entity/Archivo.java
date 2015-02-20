@@ -27,15 +27,32 @@
 package com.todoopen.archivos.entity;
 
 import java.util.Date;
+import javax.persistence.Basic;
 
 /**
  *
  * @author Nicolai Carlo Abruzzese Aguirre <nicolai@todoOpen.com>
  */
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+@Entity
+@Table(name = "archivo")
 public class Archivo {
     
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
+    @Basic(optional = false)
+    @Enumerated(EnumType.STRING)
     private TipoArchivo tipoArchivo;
     
     public static enum TipoArchivo { OTRO };
@@ -44,6 +61,7 @@ public class Archivo {
     
     private Long creador;
     
+    @Temporal(TemporalType.TIMESTAMP)
     private Date fechaCreacion;
     
     private Long duenoUs;
@@ -51,6 +69,8 @@ public class Archivo {
     private String md5;
     
     private boolean isEncrypted;
+
+    private String tipoDeContenido;
 
     public Long getId() {
         return id;
@@ -114,5 +134,13 @@ public class Archivo {
 
     public void setIsEncrypted(boolean isEncrypted) {
         this.isEncrypted = isEncrypted;
+    }
+
+    public String getTipoDeContenido() {
+        return tipoDeContenido;
+    }
+
+    public void setTipoDeContenido(String tipoDeContenido) {
+        this.tipoDeContenido = tipoDeContenido;
     }
 }
