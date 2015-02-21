@@ -17,10 +17,10 @@
 package com.todoopen.platform.dao;
 
 import com.todoopen.archivos.entity.Archivo;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -32,16 +32,15 @@ public class ArchivoDAO extends AbstractDAO<Archivo> {
         super(entityClass);
     }
 
+    @PersistenceContext(unitName = "punit")
+    private EntityManager em;
+
     @Override
     protected EntityManager getEntityManager() {
-        try {
-            
-            return EntityManagerFactory.class.newInstance().createEntityManager();
-            
-        } catch (InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(ArchivoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        if(em == null){
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("punit");
+            em = emf.createEntityManager();
         }
-        return null;
+        return em;
     }
-    
 }

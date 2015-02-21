@@ -17,11 +17,15 @@
 package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
+import com.todoopen.platform.dao.ArchivoDAO;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Date;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
+import net.codejava.crypto.CryptoException;
+import net.codejava.crypto.CryptoUtils;
 
 /**
  *
@@ -29,17 +33,46 @@ import org.apache.commons.io.FileUtils;
  */
 public class FileManager implements StorageManager, CustomFileManager {
 
-    private void saveFile(File file) throws IOException{
+    ArchivoDAO dao;
+
+    public FileManager(){
+        dao = new ArchivoDAO(Archivo.class);
+    }
+
+    private void saveFile(File file) throws IOException, CryptoException{
         Configuration conf = new FileConfiguration();
         if (!conf.serverPathAsDir().exists()) {
             conf.serverPathAsDir().mkdirs();
         }
         File serverFile = new File(conf.serverPathAsString() + File.separator + file.getName());
-        FileUtils.copyFile(file, serverFile);
+        encryptFile(file, serverFile);
+        persistFile(serverFile);
+    }
+
+    private void persistFile(File file) throws IOException{
+        Archivo arch = new Archivo();
+        arch.setFechaCreacion(new Date());
+        arch.setTipoArchivo(Archivo.TipoArchivo.OTRO);
+        arch.setRutaParcial(file.getAbsolutePath());
+        arch.setIsEncrypted(true);
+        arch.setMd5(md5sum(file));
+        arch.setTipoDeContenido(file.toURL().openConnection().getContentType());
+        dao.create(arch);
+    }
+
+    private void encryptFile(File inputFile, File encryptedFile) throws CryptoException{
+        CryptoUtils.encrypt(CryptoUtils.key, inputFile, encryptedFile);
+    }
+
+    private String md5sum(File file) throws IOException {
+        FileInputStream fis = new FileInputStream(file);
+        String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
+        fis.close();
+        return md5;
     }
 
     @Override
-    public void save(File file) throws IOException{
+    public void save(File file) throws IOException, CryptoException{
         saveFile(file);
     }
 

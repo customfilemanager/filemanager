@@ -26,6 +26,7 @@
  */
 package com.todoopen.archivos.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
 
@@ -45,7 +46,7 @@ import javax.persistence.TemporalType;
 
 @Entity
 @Table(name = "archivo")
-public class Archivo {
+public class Archivo implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -142,5 +143,28 @@ public class Archivo {
 
     public void setTipoDeContenido(String tipoDeContenido) {
         this.tipoDeContenido = tipoDeContenido;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (obj == null) {
+            return false;
+        }
+        final Archivo arch = (Archivo) obj;
+        if (this.id != arch.id && (this.id == null || !this.id.equals(arch.id))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + (this.id != null ? this.id.hashCode() : 0);
+        hash = 97 * hash + (this.fechaCreacion != null ? this.fechaCreacion.hashCode() : 0);
+        return hash;
     }
 }
