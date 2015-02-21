@@ -43,7 +43,7 @@ public interface StorageManager {
     
     void save(File file) throws IOException, CryptoException;
     
-    void save(File file, String path);
+    void save(File file, String path) throws IOException, CryptoException;
     
     void save(File file, Encoding enc);
     

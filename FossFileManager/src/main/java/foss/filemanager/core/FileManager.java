@@ -18,14 +18,19 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import com.todoopen.platform.dao.ArchivoDAO;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 import net.codejava.crypto.CryptoException;
 import net.codejava.crypto.CryptoUtils;
+import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -39,12 +44,8 @@ public class FileManager implements StorageManager, CustomFileManager {
         dao = new ArchivoDAO(Archivo.class);
     }
 
-    private void saveFile(File file) throws IOException, CryptoException{
-        Configuration conf = new FileConfiguration();
-        if (!conf.serverPathAsDir().exists()) {
-            conf.serverPathAsDir().mkdirs();
-        }
-        File serverFile = new File(conf.serverPathAsString() + File.separator + file.getName());
+    private void saveFile(File file, String path) throws IOException, CryptoException{
+        File serverFile = new File(path + File.separator + file.getName());
         encryptFile(file, serverFile);
         persistFile(serverFile);
     }
@@ -73,12 +74,16 @@ public class FileManager implements StorageManager, CustomFileManager {
 
     @Override
     public void save(File file) throws IOException, CryptoException{
-        saveFile(file);
+        Configuration conf = new FileConfiguration();
+        if (!conf.serverPathAsDir().exists()) {
+            conf.serverPathAsDir().mkdirs();
+        }
+        saveFile(file, conf.serverPathAsString());
     }
 
     @Override
-    public void save(File file, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file, String path) throws IOException, CryptoException{
+        saveFile(file, path);
     }
 
     @Override
