@@ -41,13 +41,14 @@ public class FileManager implements StorageManager, CustomFileManager {
 
     private String getPathDefault(){
         Configuration conf = new FileConfiguration();
-        if (!conf.serverPathAsDir().exists()) {
-            conf.serverPathAsDir().mkdirs();
-        }
         return conf.serverPathAsString();
     }
 
     private void saveFile(File file, String path) throws IOException, CryptoException{
+        File fpath = new File(path);
+        if(!fpath.exists()){
+            fpath.mkdirs();
+        }
         File serverFile = new File(path + File.separator + file.getName());
         Utils.encryptFile(file, serverFile);
         persistFile(serverFile);

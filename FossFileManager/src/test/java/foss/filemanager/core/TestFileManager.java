@@ -18,13 +18,10 @@ package foss.filemanager.core;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.codejava.crypto.CryptoException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
-import sun.org.mozilla.javascript.tools.idswitch.FileBody;
 
 /**
  *
@@ -56,6 +53,18 @@ public class TestFileManager extends TestBaseFileManager{
     public void testSave(){
         try {
             fileManager.save(testFile);
+        } catch (final IOException ex) {
+            // expected
+        } catch (CryptoException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSavePath(){
+        try {
+            String path = "/tmp/test-app";
+            fileManager.save(testFile, path);
         } catch (final IOException ex) {
             // expected
         } catch (CryptoException ex) {
