@@ -18,19 +18,14 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import com.todoopen.platform.dao.ArchivoDAO;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 import net.codejava.crypto.CryptoException;
-import net.codejava.crypto.CryptoUtils;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -44,9 +39,17 @@ public class FileManager implements StorageManager, CustomFileManager {
         dao = new ArchivoDAO(Archivo.class);
     }
 
+    private String getPathDefault(){
+        Configuration conf = new FileConfiguration();
+        if (!conf.serverPathAsDir().exists()) {
+            conf.serverPathAsDir().mkdirs();
+        }
+        return conf.serverPathAsString();
+    }
+
     private void saveFile(File file, String path) throws IOException, CryptoException{
         File serverFile = new File(path + File.separator + file.getName());
-        encryptFile(file, serverFile);
+        Utils.encryptFile(file, serverFile);
         persistFile(serverFile);
     }
 
@@ -56,29 +59,14 @@ public class FileManager implements StorageManager, CustomFileManager {
         arch.setTipoArchivo(Archivo.TipoArchivo.OTRO);
         arch.setRutaParcial(file.getAbsolutePath());
         arch.setIsEncrypted(true);
-        arch.setMd5(md5sum(file));
+        arch.setMd5(Utils.md5sum(file));
         arch.setTipoDeContenido(file.toURL().openConnection().getContentType());
         dao.create(arch);
     }
 
-    private void encryptFile(File inputFile, File encryptedFile) throws CryptoException{
-        CryptoUtils.encrypt(CryptoUtils.key, inputFile, encryptedFile);
-    }
-
-    private String md5sum(File file) throws IOException {
-        FileInputStream fis = new FileInputStream(file);
-        String md5 = org.apache.commons.codec.digest.DigestUtils.md5Hex(fis);
-        fis.close();
-        return md5;
-    }
-
     @Override
     public void save(File file) throws IOException, CryptoException{
-        Configuration conf = new FileConfiguration();
-        if (!conf.serverPathAsDir().exists()) {
-            conf.serverPathAsDir().mkdirs();
-        }
-        saveFile(file, conf.serverPathAsString());
+        saveFile(file, getPathDefault());
     }
 
     @Override
@@ -87,8 +75,15 @@ public class FileManager implements StorageManager, CustomFileManager {
     }
 
     @Override
-    public void save(File file, Encoding enc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException{
+        String contentType = file.toURL().openConnection().getContentType();
+        if(contentType.equalsIgnoreCase("text/plain")){
+            File fileTmp = File.createTempFile("temp-file-name", ".tmp");
+            Utils.transform(file, fileTmp, enc);
+            saveFile(fileTmp, getPathDefault());
+        } else {
+            saveFile(file, getPathDefault());
+        }
     }
 
     @Override
