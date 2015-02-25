@@ -16,6 +16,7 @@
  */
 package foss.filemanager.core;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,7 +29,8 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import net.codejava.crypto.CryptoException;
 import net.codejava.crypto.CryptoUtils;
-import org.apache.any23.encoding.TikaEncodingDetector;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 
 /**
  *
@@ -57,7 +59,7 @@ public class Utils {
             while ((sCurrentLine = br.readLine()) != null) {
                 //Charset srcCharset = Charset.forName("UTF-8");
                 InputStream is = new FileInputStream(input);
-                Charset srcCharset = Charset.forName(new TikaEncodingDetector().guessEncoding(is));
+                Charset srcCharset = Charset.forName(guessEncoding(is));
                 byte[] isoB =  encode( sCurrentLine.getBytes(), srcCharset, dstCharset);
                 fileWriter.write(new String(isoB, dstCharset ));
                 fileWriter.write("\n");
@@ -85,4 +87,11 @@ public class Utils {
         return outputData;
     }
 
+    public static String guessEncoding(InputStream is) throws IOException {
+        CharsetDetector charsetDetector = new CharsetDetector();
+        charsetDetector.setText( is instanceof BufferedInputStream ? is : new BufferedInputStream(is) );
+        charsetDetector.enableInputFilter(true);
+        CharsetMatch cm = charsetDetector.detect();
+        return cm.getName();
+    }
 }
