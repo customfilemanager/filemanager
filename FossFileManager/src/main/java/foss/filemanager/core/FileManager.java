@@ -87,8 +87,15 @@ public class FileManager implements StorageManager, CustomFileManager {
     }
 
     @Override
-    public void save(File file, Encoding enc, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
+        String contentType = file.toURL().openConnection().getContentType();
+        if(contentType.equalsIgnoreCase("text/plain")){
+            File fileTmp = File.createTempFile("temp-file-name", ".tmp");
+            Utils.transform(file, fileTmp, enc);
+            saveFile(fileTmp, path);
+        } else {
+            saveFile(file, path);
+        }
     }
 
     @Override

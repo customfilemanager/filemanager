@@ -49,7 +49,7 @@ public interface StorageManager {
     
     void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(File file, Encoding enc, String path);
+    void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException;
     
     void save(File file, Encoding enc, String path, File pathAsFile);
     
