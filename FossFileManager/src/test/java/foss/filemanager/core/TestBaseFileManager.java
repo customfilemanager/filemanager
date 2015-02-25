@@ -16,9 +16,12 @@
  */
 package foss.filemanager.core;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Random;
 import junit.framework.TestCase;
 
 /**
@@ -41,5 +44,25 @@ public abstract class TestBaseFileManager extends TestCase{
             throws IOException {
         RandomAccessFile f = new RandomAccessFile(file, "rw");
         f.setLength(256);
+    }
+
+    protected void createFileTxt(final File file, int size) {
+        try {
+          BufferedWriter output = new BufferedWriter(new FileWriter(file));
+          output.write(randomContent(size));
+          output.close();
+        } catch ( IOException e ) {
+           // expected
+        }
+    }
+
+    private String randomContent(int length) {
+        String base = "0123456789ABCDEFGHIJKLMNÑOPQRSTUVWXYZabsdefghijklmnñopqrstuvwxyzáéíóú";
+        Random random = new Random();
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            b.append(base.charAt(random.nextInt(base.length())));
+        }
+        return b.toString();
     }
 }

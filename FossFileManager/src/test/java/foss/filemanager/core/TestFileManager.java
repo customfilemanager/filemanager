@@ -18,6 +18,7 @@ package foss.filemanager.core;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import net.codejava.crypto.CryptoException;
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
@@ -33,15 +34,24 @@ public class TestFileManager extends TestBaseFileManager{
     FileManager fileManager = new FileManager();
     
     private final File testFile;
-    
+    private final File testFileTxt_1;
+    private final File testFileTxt_2;
+    private final File testFileTxt_3;
+
     public TestFileManager(){
-        testFile = new File(getTestDirectory(), "file-test.txt");
+        testFile = new File(getTestDirectory(), "file-test");
+        testFileTxt_1 = new File(getTestDirectory(), "file-test-1.txt");
+        testFileTxt_2 = new File(getTestDirectory(), "file-test-2.txt");
+        testFileTxt_3 = new File(getTestDirectory(), "file-test-3.txt");
     }
 
     @Override
     protected void setUp() throws Exception {
         getTestDirectory().mkdirs();
         createFile(testFile);
+        createFileTxt(testFileTxt_1, 50);
+        createFileTxt(testFileTxt_2, 150);
+        createFileTxt(testFileTxt_3, 200);
     }
 
     @Override
@@ -65,6 +75,33 @@ public class TestFileManager extends TestBaseFileManager{
         try {
             String path = "/tmp/test-app";
             fileManager.save(testFile, path);
+        } catch (final IOException ex) {
+            // expected
+        } catch (CryptoException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSaveEncoding(){
+        try {
+            fileManager.save(testFileTxt_1, Charset.forName("UTF-8"));
+            fileManager.save(testFileTxt_2, Charset.forName("ISO-8859-1"));
+            fileManager.save(testFileTxt_3, Charset.forName("windows-1252"));
+        } catch (final IOException ex) {
+            // expected
+        } catch (CryptoException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSaveEncodingPath(){
+        String path = "/tmp/test-app-encoding";
+        try {
+            fileManager.save(testFileTxt_1, Charset.forName("UTF-8"), path);
+            fileManager.save(testFileTxt_2, Charset.forName("ISO-8859-1"), path);
+            fileManager.save(testFileTxt_3, Charset.forName("windows-1252"), path);
         } catch (final IOException ex) {
             // expected
         } catch (CryptoException ex) {
