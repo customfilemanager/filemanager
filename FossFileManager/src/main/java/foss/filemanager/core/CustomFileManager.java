@@ -18,8 +18,10 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import net.codejava.crypto.CryptoException;
 
 /**
  *
@@ -34,8 +36,6 @@ public interface CustomFileManager {
     void save(File file, StorageManager.Encoding enc, Archivo archivo);
     
     void save(byte[] fileBArray, Archivo archivo);
-    
-    void save(byte[] fileBArray, StorageManager.Encoding enc);//Archivo archivo
     
     void save(byte[] fileBArray, StorageManager.Encoding enc, Archivo archivo);
     

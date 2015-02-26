@@ -114,7 +114,7 @@ public class TestFileManager extends TestBaseFileManager{
     }
 
     @Test
-    public void testSaveByte(){
+    public void testSaveByteArray(){
         String path = getTestTmpDirectory().getAbsolutePath();
         try {
             byte[] bFile1 = IOUtils.toByteArray(new FileInputStream(testFileTxt_1));
@@ -123,6 +123,22 @@ public class TestFileManager extends TestBaseFileManager{
             fileManager.save(bFile1 , path);
             fileManager.save(bFile2, path);
             fileManager.save(bFile3, path);
+        } catch (final IOException ex) {
+            // expected
+        } catch (CryptoException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSaveArrayByteEncoding(){
+        try {
+            byte[] bFile1 = IOUtils.toByteArray(new FileInputStream(testFileTxt_1));
+            byte[] bFile2 = IOUtils.toByteArray(new FileInputStream(testFileTxt_2));
+            byte[] bFile3 = IOUtils.toByteArray(new FileInputStream(testFileTxt_3));
+            fileManager.save(bFile1, Charset.forName("UTF-8"));
+            fileManager.save(bFile2, Charset.forName("ISO-8859-1"));
+            fileManager.save(bFile3, Charset.forName("windows-1252"));
         } catch (final IOException ex) {
             // expected
         } catch (CryptoException ex) {

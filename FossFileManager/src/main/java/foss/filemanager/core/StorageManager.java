@@ -55,7 +55,7 @@ public interface StorageManager {
     
     void save(byte[] fileBArray, String path) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(byte[] fileBArray, Encoding enc);
+    void save(byte[] fileBArray, Charset enc) throws FileNotFoundException, IOException, CryptoException;
     
     void save(byte[] fileBArray, Encoding enc, String path);
     

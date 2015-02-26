@@ -20,16 +20,12 @@ import com.todoopen.archivos.entity.Archivo;
 import com.todoopen.platform.dao.ArchivoDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import net.codejava.crypto.CryptoException;
-import net.codejava.crypto.CryptoUtils;
 
 /**
  *
@@ -62,12 +58,6 @@ public class FileManager implements StorageManager, CustomFileManager {
         persistFile(serverFile);
     }
 
-    private void saveFile(byte[] fileBArray, String path) throws IOException, CryptoException{
-        createPath(path);
-        File file = Utils.arrayByteToFile(fileBArray);
-        saveFile(file, path);
-    }
-
     private void persistFile(File file) throws IOException{
         Archivo arch = new Archivo();
         arch.setFechaCreacion(new Date());
@@ -93,9 +83,7 @@ public class FileManager implements StorageManager, CustomFileManager {
     public void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException{
         String contentType = file.toURL().openConnection().getContentType();
         if(contentType.equalsIgnoreCase("text/plain")){
-            String tmp = System.getProperty("java.io.tmpdir");
-            File fileTmp = new File(tmp+File.separator+file.getName());
-            Utils.transform(file, fileTmp, enc);
+            File fileTmp = Utils.encodingFile(file, enc);
             saveFile(fileTmp, getPathDefault());
         } else {
             saveFile(file, getPathDefault());
@@ -106,9 +94,7 @@ public class FileManager implements StorageManager, CustomFileManager {
     public void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
         String contentType = file.toURL().openConnection().getContentType();
         if(contentType.equalsIgnoreCase("text/plain")){
-            String tmp = System.getProperty("java.io.tmpdir");
-            File fileTmp = new File(tmp+File.separator+file.getName());
-            Utils.transform(file, fileTmp, enc);
+            File fileTmp = Utils.encodingFile(file, enc);
             saveFile(fileTmp, path);
         } else {
             saveFile(file, path);
@@ -122,12 +108,15 @@ public class FileManager implements StorageManager, CustomFileManager {
 
     @Override
     public void save(byte[] fileBArray, String path)throws FileNotFoundException, IOException, CryptoException {
-        saveFile(fileBArray, path);
+        createPath(path);
+        File file = Utils.arrayByteToFile(fileBArray);
+        saveFile(file, path);
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc);
     }
 
     @Override

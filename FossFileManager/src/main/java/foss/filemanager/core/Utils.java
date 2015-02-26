@@ -101,7 +101,7 @@ public class Utils {
     }
 
     public static File arrayByteToFile(byte[] fileBArray) throws FileNotFoundException, IOException{
-        DateFormat df =new SimpleDateFormat("ddMMyyyy-hhmmss");
+        DateFormat df =new SimpleDateFormat("ddMMyyyy-hhmmss-S");
         String name = df.format(new Date());
         String tmp = System.getProperty("java.io.tmpdir");
         File file = new File(tmp, name);
@@ -109,5 +109,12 @@ public class Utils {
         fos.write(fileBArray);
 	fos.close();
         return file;
+    }
+
+    public static File encodingFile(File file, Charset enc) throws IOException {
+        String tmp = System.getProperty("java.io.tmpdir");
+        File fileTmp = new File(tmp+File.separator+file.getName());
+        Utils.transform(file, fileTmp, enc);
+        return fileTmp;
     }
 }
