@@ -47,7 +47,7 @@ public interface CustomFileManager {
     
     File load(Archivo archivo, StorageManager.Encoding enc);
     
-    File load(Long archivoId);
+    File load(Long archivoId) throws IOException, CryptoException;
     
     Archivo loadArchivo(Archivo archivo);
     

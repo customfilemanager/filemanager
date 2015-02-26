@@ -20,9 +20,12 @@ import com.todoopen.archivos.entity.Archivo;
 import com.todoopen.platform.dao.ArchivoDAO;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import net.codejava.crypto.CryptoException;
@@ -45,14 +48,24 @@ public class FileManager implements StorageManager, CustomFileManager {
         return conf.serverPathAsString();
     }
 
-    private void saveFile(File file, String path) throws IOException, CryptoException{
+    private void createPath(String path){
         File fpath = new File(path);
         if(!fpath.exists()){
             fpath.mkdirs();
         }
+    }
+
+    private void saveFile(File file, String path) throws IOException, CryptoException{
+        createPath(path);
         File serverFile = new File(path + File.separator + file.getName());
         Utils.encryptFile(file, serverFile);
         persistFile(serverFile);
+    }
+
+    private void saveFile(byte[] fileBArray, String path) throws IOException, CryptoException{
+        createPath(path);
+        File file = Utils.byteArrayToFile(fileBArray);
+        saveFile(file, path);
     }
 
     private void persistFile(File file) throws IOException{
@@ -108,8 +121,8 @@ public class FileManager implements StorageManager, CustomFileManager {
     }
 
     @Override
-    public void save(byte[] fileBArray, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, String path)throws FileNotFoundException, IOException, CryptoException {
+        saveFile(fileBArray, path);
     }
 
     @Override
