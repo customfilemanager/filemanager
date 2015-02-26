@@ -31,6 +31,7 @@ import junit.framework.TestCase;
 public abstract class TestBaseFileManager extends TestCase{
 
     private static volatile File testDir;
+    private static volatile File testTmpDir;
 
     public static File getTestDirectory() {
         if (testDir == null) {
@@ -38,6 +39,14 @@ public abstract class TestBaseFileManager extends TestCase{
         }
         testDir.mkdirs();
         return testDir;
+    }
+
+    public static File getTestTmpDirectory() {
+        if (testTmpDir == null) {
+            testTmpDir = new File("test/tmp-files/").getAbsoluteFile();
+        }
+        testTmpDir.mkdirs();
+        return testTmpDir;
     }
 
     protected void createFile(final File file)

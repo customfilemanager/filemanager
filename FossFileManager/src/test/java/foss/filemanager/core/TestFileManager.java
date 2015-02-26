@@ -17,10 +17,12 @@
 package foss.filemanager.core;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import net.codejava.crypto.CryptoException;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -48,6 +50,7 @@ public class TestFileManager extends TestBaseFileManager{
     @Override
     protected void setUp() throws Exception {
         getTestDirectory().mkdirs();
+        getTestTmpDirectory().mkdirs();
         createFile(testFile);
         createFileTxt(testFileTxt_1, 50);
         createFileTxt(testFileTxt_2, 150);
@@ -57,6 +60,7 @@ public class TestFileManager extends TestBaseFileManager{
     @Override
     protected void tearDown() throws Exception {
         FileUtils.deleteDirectory(getTestDirectory());
+        FileUtils.deleteDirectory(getTestTmpDirectory());
     }
 
     @Test
@@ -73,7 +77,7 @@ public class TestFileManager extends TestBaseFileManager{
     @Test
     public void testSavePath(){
         try {
-            String path = "/tmp/test-app";
+            String path = getTestTmpDirectory().getAbsolutePath();
             fileManager.save(testFile, path);
         } catch (final IOException ex) {
             // expected
@@ -97,11 +101,28 @@ public class TestFileManager extends TestBaseFileManager{
 
     @Test
     public void testSaveEncodingPath(){
-        String path = "/tmp/test-app-encoding";
+        String path = getTestTmpDirectory().getAbsolutePath();
         try {
             fileManager.save(testFileTxt_1, Charset.forName("UTF-8"), path);
             fileManager.save(testFileTxt_2, Charset.forName("ISO-8859-1"), path);
             fileManager.save(testFileTxt_3, Charset.forName("windows-1252"), path);
+        } catch (final IOException ex) {
+            // expected
+        } catch (CryptoException ex) {
+            // expected
+        }
+    }
+
+    @Test
+    public void testSaveByte(){
+        String path = getTestTmpDirectory().getAbsolutePath();
+        try {
+            byte[] bFile1 = IOUtils.toByteArray(new FileInputStream(testFileTxt_1));
+            byte[] bFile2 = IOUtils.toByteArray(new FileInputStream(testFileTxt_2));
+            byte[] bFile3 = IOUtils.toByteArray(new FileInputStream(testFileTxt_3));
+            fileManager.save(bFile1 , path);
+            fileManager.save(bFile2, path);
+            fileManager.save(bFile3, path);
         } catch (final IOException ex) {
             // expected
         } catch (CryptoException ex) {
