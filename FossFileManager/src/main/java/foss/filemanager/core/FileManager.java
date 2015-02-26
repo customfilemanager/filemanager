@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.util.Date;
 import java.util.List;
 import net.codejava.crypto.CryptoException;
+import net.codejava.crypto.CryptoUtils;
 
 /**
  *
@@ -79,7 +80,8 @@ public class FileManager implements StorageManager, CustomFileManager {
     public void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException{
         String contentType = file.toURL().openConnection().getContentType();
         if(contentType.equalsIgnoreCase("text/plain")){
-            File fileTmp = File.createTempFile("temp-file-name", ".tmp");
+            String tmp = System.getProperty("java.io.tmpdir");
+            File fileTmp = new File(tmp+File.separator+file.getName());
             Utils.transform(file, fileTmp, enc);
             saveFile(fileTmp, getPathDefault());
         } else {
@@ -91,7 +93,8 @@ public class FileManager implements StorageManager, CustomFileManager {
     public void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
         String contentType = file.toURL().openConnection().getContentType();
         if(contentType.equalsIgnoreCase("text/plain")){
-            File fileTmp = File.createTempFile("temp-file-name", ".tmp");
+            String tmp = System.getProperty("java.io.tmpdir");
+            File fileTmp = new File(tmp+File.separator+file.getName());
             Utils.transform(file, fileTmp, enc);
             saveFile(fileTmp, path);
         } else {
