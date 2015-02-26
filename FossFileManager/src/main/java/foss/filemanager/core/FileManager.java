@@ -120,13 +120,15 @@ public class FileManager implements StorageManager, CustomFileManager {
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc, path);
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc, File path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc, File path) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc, path.getAbsolutePath());
     }
 
     @Override
