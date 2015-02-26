@@ -64,7 +64,7 @@ public class FileManager implements StorageManager, CustomFileManager {
 
     private void saveFile(byte[] fileBArray, String path) throws IOException, CryptoException{
         createPath(path);
-        File file = Utils.byteArrayToFile(fileBArray);
+        File file = Utils.arrayByteToFile(fileBArray);
         saveFile(file, path);
     }
 

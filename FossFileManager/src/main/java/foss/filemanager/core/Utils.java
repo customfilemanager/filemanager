@@ -20,6 +20,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,6 +29,9 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import net.codejava.crypto.CryptoException;
 import net.codejava.crypto.CryptoUtils;
 import org.apache.tika.parser.txt.CharsetDetector;
@@ -93,5 +98,16 @@ public class Utils {
         charsetDetector.enableInputFilter(true);
         CharsetMatch cm = charsetDetector.detect();
         return cm.getName();
+    }
+
+    public static File arrayByteToFile(byte[] fileBArray) throws FileNotFoundException, IOException{
+        DateFormat df =new SimpleDateFormat("ddMMyyyy-hhmmss");
+        String name = df.format(new Date());
+        String tmp = System.getProperty("java.io.tmpdir");
+        File file = new File(tmp, name);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(fileBArray);
+	fos.close();
+        return file;
     }
 }
