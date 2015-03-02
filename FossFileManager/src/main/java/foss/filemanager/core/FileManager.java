@@ -17,9 +17,15 @@
 package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
+import com.todoopen.platform.dao.ArchivoDAO;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.Date;
 import java.util.List;
+import net.codejava.crypto.CryptoException;
 
 /**
  *
@@ -27,24 +33,72 @@ import java.util.List;
  */
 public class FileManager implements StorageManager, CustomFileManager {
 
-    @Override
-    public void save(File file) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    ArchivoDAO dao;
+
+    public FileManager(){
+        dao = new ArchivoDAO(Archivo.class);
+    }
+
+    private String getPathDefault(){
+        Configuration conf = new FileConfiguration();
+        return conf.serverPathAsString();
+    }
+
+    private void createPath(String path){
+        File fpath = new File(path);
+        if(!fpath.exists()){
+            fpath.mkdirs();
+        }
+    }
+
+    private void saveFile(File file, String path) throws IOException, CryptoException{
+        createPath(path);
+        File serverFile = new File(path + File.separator + file.getName());
+        Utils.encryptFile(file, serverFile);
+        persistFile(serverFile);
+    }
+
+    private void persistFile(File file) throws IOException{
+        Archivo arch = new Archivo();
+        arch.setFechaCreacion(new Date());
+        arch.setTipoArchivo(Archivo.TipoArchivo.OTRO);
+        arch.setRutaParcial(file.getAbsolutePath());
+        arch.setIsEncrypted(true);
+        arch.setMd5(Utils.md5sum(file));
+        arch.setTipoDeContenido(file.toURL().openConnection().getContentType());
+        dao.create(arch);
     }
 
     @Override
-    public void save(File file, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file) throws IOException, CryptoException{
+        saveFile(file, getPathDefault());
     }
 
     @Override
-    public void save(File file, Encoding enc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file, String path) throws IOException, CryptoException{
+        saveFile(file, path);
     }
 
     @Override
-    public void save(File file, Encoding enc, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException{
+        String contentType = file.toURL().openConnection().getContentType();
+        if(contentType.equalsIgnoreCase("text/plain")){
+            File fileTmp = Utils.encodingFile(file, enc);
+            saveFile(fileTmp, getPathDefault());
+        } else {
+            saveFile(file, getPathDefault());
+        }
+    }
+
+    @Override
+    public void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
+        String contentType = file.toURL().openConnection().getContentType();
+        if(contentType.equalsIgnoreCase("text/plain")){
+            File fileTmp = Utils.encodingFile(file, enc);
+            saveFile(fileTmp, path);
+        } else {
+            saveFile(file, path);
+        }
     }
 
     @Override
@@ -53,23 +107,28 @@ public class FileManager implements StorageManager, CustomFileManager {
     }
 
     @Override
-    public void save(byte[] fileBArray, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, String path)throws FileNotFoundException, IOException, CryptoException {
+        createPath(path);
+        File file = Utils.arrayByteToFile(fileBArray);
+        saveFile(file, path);
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc);
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc, String path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc, path);
     }
 
     @Override
-    public void save(byte[] fileBArray, Encoding enc, File path) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void save(byte[] fileBArray, Charset enc, File path) throws FileNotFoundException, IOException, CryptoException{
+        File file = Utils.arrayByteToFile(fileBArray);
+        save(file, enc, path.getAbsolutePath());
     }
 
     @Override

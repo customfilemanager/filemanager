@@ -46,7 +46,11 @@ public abstract class AbstractDAO<T> implements Serializable {
     protected abstract EntityManager getEntityManager();
 
     public void create(T entity) {
-        getEntityManager().persist(entity);
+        EntityManager em = getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        tx.begin();
+        em.persist(entity);
+        tx.commit();
     }
 
     public void edit(T entity) {

@@ -18,8 +18,10 @@ package foss.filemanager.core;
 
 import com.todoopen.archivos.entity.Archivo;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import net.codejava.crypto.CryptoException;
 
 /**
  *
@@ -35,8 +37,6 @@ public interface CustomFileManager {
     
     void save(byte[] fileBArray, Archivo archivo);
     
-    void save(byte[] fileBArray, StorageManager.Encoding enc);//Archivo archivo
-    
     void save(byte[] fileBArray, StorageManager.Encoding enc, Archivo archivo);
     
     boolean isFileZeroBytes(Archivo archivo);
@@ -47,7 +47,7 @@ public interface CustomFileManager {
     
     File load(Archivo archivo, StorageManager.Encoding enc);
     
-    File load(Long archivoId);
+    File load(Long archivoId) throws IOException, CryptoException;
     
     Archivo loadArchivo(Archivo archivo);
     

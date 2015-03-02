@@ -19,6 +19,10 @@ package foss.filemanager.core;
 
 import static foss.filemanager.core.StorageManager.TypeStorage.FILE;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import net.codejava.crypto.CryptoException;
 
 
 /**
@@ -39,23 +43,23 @@ public interface StorageManager {
      */
     public static enum Encoding { UTF8, ISO_8859_1 };
     
-    void save(File file);
+    void save(File file) throws IOException, CryptoException;
     
-    void save(File file, String path);
+    void save(File file, String path) throws IOException, CryptoException;
     
-    void save(File file, Encoding enc);
+    void save(File file, Charset enc) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(File file, Encoding enc, String path);
+    void save(File file, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException;
     
     void save(File file, Encoding enc, String path, File pathAsFile);
     
-    void save(byte[] fileBArray, String path);
+    void save(byte[] fileBArray, String path) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(byte[] fileBArray, Encoding enc);
+    void save(byte[] fileBArray, Charset enc) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(byte[] fileBArray, Encoding enc, String path);
+    void save(byte[] fileBArray, Charset enc, String path) throws FileNotFoundException, IOException, CryptoException;
     
-    void save(byte[] fileBArray, Encoding enc, File path);
+    void save(byte[] fileBArray, Charset enc, File path) throws FileNotFoundException, IOException, CryptoException;
     
     boolean isFileZeroBytes(File file);
     

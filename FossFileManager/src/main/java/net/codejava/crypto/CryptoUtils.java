@@ -20,6 +20,8 @@ import javax.crypto.spec.SecretKeySpec;
  *
  */
 public class CryptoUtils {
+        public static String key = "C377664882545F9AE8409BFB961783F8";
+
 	private static final String ALGORITHM = "AES";
 	private static final String TRANSFORMATION = "AES";
 
